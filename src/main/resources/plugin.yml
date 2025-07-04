@@ -1,0 +1,4 @@
+name: IgniteStreakRewards
+version: '1.0.0'
+main: com.ignitedev.igniteStreakRewards.IgniteStreakRewards
+api-version: '1.21'
