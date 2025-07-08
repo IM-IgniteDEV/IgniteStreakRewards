@@ -1,6 +1,7 @@
 package com.ignitedev.igniteStreakRewards.config;
 
 import com.ignitedev.igniteStreakRewards.base.StreakReward;
+import com.ignitedev.igniteStreakRewards.util.ItemUtility;
 import com.twodevsstudio.simplejsonconfig.api.Config;
 import com.twodevsstudio.simplejsonconfig.interfaces.Comment;
 import com.twodevsstudio.simplejsonconfig.interfaces.Configuration;
@@ -75,10 +76,10 @@ public class StreakRewardsConfiguration extends Config {
     rewards.put(
         1440,
         new StreakReward(
-            List.of("say You got one day in streak (1440 minutes is one day)"),
             List.of(new ItemStack(Material.DIAMOND_PICKAXE, 1)),
-            List.of("Reward message"),
-            List.of("One of that", "commands", "will be", "selected", "randomly")));
+            List.of("say You got one day in streak (1440 minutes is one day)"),
+            List.of("One of that", "commands", "will be", "selected", "randomly"),
+            List.of("Reward message")));
 
     return rewards;
   }
@@ -89,15 +90,15 @@ public class StreakRewardsConfiguration extends Config {
     rewards.put(
         1,
         new StreakReward(
-            List.of("say reward acquired"),
             List.of(new ItemStack(Material.DIAMOND_PICKAXE, 1)),
-            List.of("Reward message"),
-            List.of("One of that", "commands", "will be", "selected", "randomly")));
+            List.of("say reward acquired"),
+            List.of("One of that", "commands", "will be", "selected", "randomly"),
+            List.of("Reward message")));
     rewards.put(
         2,
         new StreakReward(
-            List.of("say reward acquired nr 2"), null, List.of("Reward 2 message"), null));
-    rewards.put(3, new StreakReward(List.of("say reward acquired nr 3"), null, null, null));
+            null, List.of("say reward acquired nr 2"), null, List.of("Reward 2 message")));
+    rewards.put(3, new StreakReward(null, List.of("say reward acquired nr 3"), null, null));
 
     return rewards;
   }

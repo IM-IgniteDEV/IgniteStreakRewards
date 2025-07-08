@@ -1,4 +1,4 @@
-package com.ignitedev.igniteStreakRewards.data;
+package com.ignitedev.igniteStreakRewards.base;
 
 import com.ignitedev.aparecium.util.MessageUtility;
 import com.ignitedev.aparecium.util.collection.RandomSelector;
