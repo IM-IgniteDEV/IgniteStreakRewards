@@ -1,6 +1,6 @@
 package com.ignitedev.igniteStreakRewards.config;
 
-import com.ignitedev.igniteStreakRewards.data.StreakReward;
+import com.ignitedev.igniteStreakRewards.base.StreakReward;
 import com.twodevsstudio.simplejsonconfig.api.Config;
 import com.twodevsstudio.simplejsonconfig.interfaces.Comment;
 import com.twodevsstudio.simplejsonconfig.interfaces.Configuration;
@@ -17,15 +17,18 @@ import java.util.Map;
 @Getter
 public class StreakRewardsConfiguration extends Config {
 
-  private String mongoDbConnectionAddress = "mongodb://localhost:27017";
-  private String mongoDbDatabaseName = "streakRewards";
+  private String databaseURL = "";
+  private String databaseName = "streaks";
 
-  private String waitingDailyReward =
-      "&e☆ &6DailyRewards&e ☆&c Daily reward is waiting! Use /daily";
-  private String rewardNotAvailable = "&e☆ &6DailyRewards&e ☆&c This reward is not available!";
-  private String rewardAlreadyClaimed = "&e☆ &6DailyRewards&e ☆&c This reward is already claimed!";
-  private String rewardCorrupted =
-      "&e☆ &6DailyRewards&e ☆&c Reward corrupted, Please contact administrator!";
+  private String prefix = "&e☆ &6DailyRewards&e ☆&c";
+
+  private String waitingDailyReward = "Daily reward is waiting! Use /daily";
+  private String rewardNotAvailable = "This reward is not available!";
+  private String rewardAlreadyClaimed = "This reward is already claimed!";
+  private String rewardCorrupted = "Reward corrupted, Please contact administrator!";
+
+  @Comment("Auto save message to broadcast, empty to disable")
+  private String autoSaveMessage = "&aAuto save completed successfully";
 
   private Map<Integer, ItemStack> dailyInventory = dailyInventoryExample();
 
