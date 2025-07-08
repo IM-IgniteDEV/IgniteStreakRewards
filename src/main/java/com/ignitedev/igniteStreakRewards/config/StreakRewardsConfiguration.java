@@ -27,6 +27,7 @@ public class StreakRewardsConfiguration extends Config {
   private String rewardNotAvailable = "This reward is not available!";
   private String rewardAlreadyClaimed = "This reward is already claimed!";
   private String rewardCorrupted = "Reward corrupted, Please contact administrator!";
+  private String noPermission = "You do not have permission to do this!";
 
   @Comment("Auto save message to broadcast, empty to disable")
   private String autoSaveMessage = "&aAuto save completed successfully";
