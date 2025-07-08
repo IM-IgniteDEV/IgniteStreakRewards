@@ -14,8 +14,7 @@ import org.bukkit.event.Listener;
 
 public class PlayerTimeSpendListener implements Listener {
 
-  @Autowired
-  private static StreakRewardsConfiguration configuration;
+  @Autowired private static StreakRewardsConfiguration configuration;
 
   @EventHandler
   public void onTimeSpend(TimeSpentEvent event) {

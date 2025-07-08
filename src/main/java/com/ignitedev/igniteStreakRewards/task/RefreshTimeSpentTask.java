@@ -13,8 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @RequiredArgsConstructor
 public class RefreshTimeSpentTask extends BukkitRunnable {
 
-  @Autowired
-  private static StreakRewardsConfiguration configuration;
+  @Autowired private static StreakRewardsConfiguration configuration;
 
   private final StreakPlayerRepository repository;
 
@@ -38,7 +37,8 @@ public class RefreshTimeSpentTask extends BukkitRunnable {
       if (rewardTime == 0) {
         continue;
       }
-      Bukkit.getPluginManager().callEvent(new TimeSpentEvent(streakPlayer, streakPlayer.getTotalTimeSpend()));
+      Bukkit.getPluginManager()
+          .callEvent(new TimeSpentEvent(streakPlayer, streakPlayer.getTotalTimeSpend()));
     }
   }
 }

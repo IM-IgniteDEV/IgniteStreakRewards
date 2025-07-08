@@ -11,8 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @RequiredArgsConstructor
 public class SavePlayersDataTask extends BukkitRunnable {
 
-  @Autowired
-  private static StreakRewardsConfiguration configuration;
+  @Autowired private static StreakRewardsConfiguration configuration;
 
   private final StreakPlayerRepository repository;
 

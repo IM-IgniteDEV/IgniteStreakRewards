@@ -11,7 +11,6 @@ public class PlayerQuitListener implements Listener {
 
   private final StreakPlayerRepository repository;
 
-
   @EventHandler
   public void onQuit(PlayerQuitEvent event) {
     repository.save(repository.findOrCreateByUUID(event.getPlayer().getUniqueId()));

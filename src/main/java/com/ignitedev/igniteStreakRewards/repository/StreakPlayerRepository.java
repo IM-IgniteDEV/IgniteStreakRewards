@@ -18,8 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class StreakPlayerRepository {
 
-  @Getter
-  private final Map<UUID, StreakPlayer> playersCache = new ConcurrentHashMap<>();
+  @Getter private final Map<UUID, StreakPlayer> playersCache = new ConcurrentHashMap<>();
 
   private final SimpleMongo simpleMongo;
 
@@ -79,10 +78,11 @@ public class StreakPlayerRepository {
 
   public boolean exists(@NotNull UUID uuid) {
     return simpleMongo
-        .get()
-        .getObjectSync(
-            simpleMongo.getDatabase().getCollection("players"),
-            new Document("_uuid", uuid.toString()))
-        .first() != null;
+            .get()
+            .getObjectSync(
+                simpleMongo.getDatabase().getCollection("players"),
+                new Document("_uuid", uuid.toString()))
+            .first()
+        != null;
   }
 }

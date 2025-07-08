@@ -18,8 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 @RequiredArgsConstructor
 public class PlayerInventoryClickListener implements Listener {
 
-  @Autowired
-  private static StreakRewardsConfiguration configuration;
+  @Autowired private static StreakRewardsConfiguration configuration;
 
   private final StreakPlayerRepository repository;
 
@@ -59,9 +58,11 @@ public class PlayerInventoryClickListener implements Listener {
       }
     }
     if (streakPlayer.getLoginStreak() < dailyFinalIndex) {
-      MessageUtility.send(player, configuration.getPrefix() + configuration.getRewardNotAvailable());
+      MessageUtility.send(
+          player, configuration.getPrefix() + configuration.getRewardNotAvailable());
     } else {
-      MessageUtility.send(player, configuration.getPrefix() + configuration.getRewardAlreadyClaimed());
+      MessageUtility.send(
+          player, configuration.getPrefix() + configuration.getRewardAlreadyClaimed());
     }
     player.closeInventory();
   }

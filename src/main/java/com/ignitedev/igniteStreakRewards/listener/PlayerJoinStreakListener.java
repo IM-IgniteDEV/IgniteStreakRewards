@@ -16,8 +16,7 @@ import org.bukkit.event.Listener;
 @RequiredArgsConstructor
 public class PlayerJoinStreakListener implements Listener {
 
-  @Autowired
-  private static StreakRewardsConfiguration configuration;
+  @Autowired private static StreakRewardsConfiguration configuration;
 
   private final IgniteStreakRewards plugin;
 
@@ -34,7 +33,8 @@ public class PlayerJoinStreakListener implements Listener {
             plugin,
             () -> {
               if (!streakPlayer.getRewardsToGrab().isEmpty()) {
-                MessageUtility.send(player, configuration.getPrefix() + configuration.getWaitingDailyReward());
+                MessageUtility.send(
+                    player, configuration.getPrefix() + configuration.getWaitingDailyReward());
               }
             },
             configuration.getWaitingProcessDelayOnPlayerJoin());

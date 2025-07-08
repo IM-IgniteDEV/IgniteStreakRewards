@@ -13,8 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 @RequiredArgsConstructor
 public class PendingRewardRemainderTask extends BukkitRunnable {
 
-  @Autowired
-  private static StreakRewardsConfiguration configuration;
+  @Autowired private static StreakRewardsConfiguration configuration;
 
   private final StreakPlayerRepository repository;
 
@@ -29,7 +28,8 @@ public class PendingRewardRemainderTask extends BukkitRunnable {
       if (streakPlayer.getRewardsToGrab().isEmpty()) {
         continue;
       }
-      MessageUtility.send(player, configuration.getPrefix() + configuration.getWaitingDailyReward());
+      MessageUtility.send(
+          player, configuration.getPrefix() + configuration.getWaitingDailyReward());
     }
   }
 }

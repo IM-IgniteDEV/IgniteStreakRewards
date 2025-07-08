@@ -12,8 +12,7 @@ import org.bukkit.event.Listener;
 
 public class PlayerUniqueJoinListener implements Listener {
 
-  @Autowired
-  private static StreakRewardsConfiguration pluginConfig;
+  @Autowired private static StreakRewardsConfiguration pluginConfig;
 
   @EventHandler
   public void onUniqueJoin(UniqueJoinEvent event) {

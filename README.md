@@ -1,14 +1,18 @@
 # IgniteStreakRewards
-Daily Streak Rewards allows you to create rewards which players can grab every day and collect streak for better rewards, it also allows you to create rewards for played time on server as well as reward for specific amount of accounts created.
+
+Daily Streak Rewards allows you to create rewards which players can grab every day and collect streak for better
+rewards, it also allows you to create rewards for played time on server as well as reward for specific amount of
+accounts created.
 
 ---
 
 ## Features:
+
 * Daily Rewards (Collecting daily rewards in streak)
 * Play Time Rewards (Rewards for spent time on server)
-* Registered account amount reward (Reward for being, for example, 100th account registered) 
+* Registered account amount reward (Reward for being, for example, 100th account registered)
 * Rewards as: Commands, Messages, Items, Random Commands
-* Configurable Messages, Inventory, Rewards, Rewards conditions. 
+* Configurable Messages, Inventory, Rewards, Rewards conditions.
 * Developer Friendly
 * MongoDB support for persistent data storage
 * Highly configurable via `StreakRewardsConfiguration.json`
@@ -24,18 +28,16 @@ Daily Streak Rewards allows you to create rewards which players can grab every d
 
 ---
 
-
 ## Commands:
 
-- `/daily` — Open daily menu 
+- `/daily` — Open daily menu
   **Permission:** `ignitestreakrewards.daily`
 
-
 ## Preview:
+
 ![image](https://user-images.githubusercontent.com/31209154/142352946-6d713607-07a9-4a4e-bfb2-90f1993b94a9.png)
 ![image](https://user-images.githubusercontent.com/31209154/142353085-850c70f5-64bb-46ed-aeea-8dccb0399c03.png)
 ![image](https://user-images.githubusercontent.com/31209154/142353153-a421adcc-3394-4cbe-8dd6-fe0f5895e8d4.png)
-
 
 ## Configuration
 
@@ -194,7 +196,6 @@ IgniteLeveling exposes several events you can listen to in your plugin:
 - `UniqueJoinEvent` — fired when a player joins the server for the first time
 
 ---
-
 
 ## TODO
 
