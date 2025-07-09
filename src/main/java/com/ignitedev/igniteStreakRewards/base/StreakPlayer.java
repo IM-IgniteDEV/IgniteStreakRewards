@@ -17,115 +17,107 @@ import java.util.UUID;
 
 @Data
 public class StreakPlayer {
+  private static final int MAX_STREAK = 30;
 
   @Autowired private static StreakRewardsConfiguration configuration;
 
   private final UUID uuid;
   private final List<Integer> rewardsToGrab;
-
   private int loginStreak; // 1-30
   private int totalTimeSpend; // in minutes
-  private long lastActivityTime = 0;
-
+  private long lastActivityTime;
   private transient Player cachedPlayer;
 
-  // should be executed when login
   public void checkLoginStreak(IgniteStreakRewards plugin) {
-    // if you don't have any data about last activity then your streak is equal to 1
-    if (lastActivityTime == 0) {
-      loginStreak = 1;
-      Bukkit.getScheduler()
-          .runTask(
-              plugin,
-              () -> Bukkit.getPluginManager().callEvent(new LoginStreakEvent(this, loginStreak)));
-
-      if (!rewardsToGrab.contains(loginStreak)) {
-        rewardsToGrab.add(loginStreak);
-      }
+    if (isFirstLogin()) {
+      handleFirstLogin(plugin);
       return;
     }
-    LocalDateTime localDateTimeNow = LocalDateTime.now();
-    LocalDateTime localDateTimeLastActivity =
+    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime lastActivity =
         LocalDateTime.ofInstant(Instant.ofEpochMilli(lastActivityTime), ZoneId.systemDefault());
 
-    // if days are different
-    if (localDateTimeLastActivity.getDayOfYear() != localDateTimeNow.getDayOfYear()) {
-      // if last activity is not the same day as current
-      int lastActivity = localDateTimeLastActivity.plusDays(1).getDayOfYear();
-      int now = localDateTimeNow.getDayOfYear();
-
-      if (lastActivity == now) {
-        // if saved activity (+ one day) is the same day
-        // we will display streak even bigger than 30 but rewards will be only duo to 30
-        loginStreak = loginStreak == 30 ? 30 : loginStreak + 1;
-
-        Bukkit.getScheduler()
-            .runTask(
-                plugin,
-                () -> Bukkit.getPluginManager().callEvent(new LoginStreakEvent(this, loginStreak)));
-
-        if (!rewardsToGrab.contains(loginStreak)) {
-          rewardsToGrab.add(loginStreak);
-        }
-      } else {
-        loginStreak = 1;
-        rewardsToGrab.add(loginStreak);
-        Bukkit.getScheduler()
-            .runTask(
-                plugin,
-                () -> Bukkit.getPluginManager().callEvent(new LoginStreakEvent(this, loginStreak)));
-      }
+    if (isNewDay(now, lastActivity)) {
+      updateLoginStreak(plugin, now, lastActivity);
     }
   }
 
-  // should be executed when login
+  private boolean isFirstLogin() {
+    return lastActivityTime == 0;
+  }
+
+  private void handleFirstLogin(IgniteStreakRewards plugin) {
+    loginStreak = 1;
+    fireLoginStreakEvent(plugin, loginStreak);
+    addRewardIfNotExists(loginStreak);
+  }
+
+  private boolean isNewDay(LocalDateTime now, LocalDateTime lastActivity) {
+    return lastActivity.getDayOfYear() != now.getDayOfYear();
+  }
+
+  private void updateLoginStreak(
+      IgniteStreakRewards plugin, LocalDateTime now, LocalDateTime lastActivity) {
+    boolean isConsecutiveDay = lastActivity.plusDays(1).getDayOfYear() == now.getDayOfYear();
+
+    if (isConsecutiveDay) {
+      incrementStreak(plugin);
+    } else {
+      resetStreak(plugin);
+    }
+  }
+
+  private void incrementStreak(IgniteStreakRewards plugin) {
+    loginStreak = Math.min(loginStreak + 1, MAX_STREAK);
+    fireLoginStreakEvent(plugin, loginStreak);
+    addRewardIfNotExists(loginStreak);
+  }
+
+  private void resetStreak(IgniteStreakRewards plugin) {
+    loginStreak = 1;
+    addRewardIfNotExists(loginStreak);
+    fireLoginStreakEvent(plugin, loginStreak);
+  }
+
+  private void addRewardIfNotExists(int streak) {
+    if (!rewardsToGrab.contains(streak)) {
+      rewardsToGrab.add(streak);
+    }
+  }
+
+  private void fireLoginStreakEvent(IgniteStreakRewards plugin, int streak) {
+    Bukkit.getScheduler()
+        .runTask(
+            plugin, () -> Bukkit.getPluginManager().callEvent(new LoginStreakEvent(this, streak)));
+  }
+
   public void addUniqueLoginStreak(IgniteStreakRewards plugin) {
-    // cannot call event from another thread
-    StreakPlayer StreakPlayer = this;
     Bukkit.getScheduler()
         .runTask(
             plugin,
             () ->
                 Bukkit.getPluginManager()
-                    .callEvent(
-                        new UniqueJoinEvent(StreakPlayer, Bukkit.getOfflinePlayers().length)));
+                    .callEvent(new UniqueJoinEvent(this, Bukkit.getOfflinePlayers().length)));
   }
 
   public Player getCachedPlayer() {
     if (cachedPlayer == null) {
-      setCachedPlayer();
+      cachedPlayer = Bukkit.getPlayer(uuid);
     }
-    if (cachedPlayer == null || !cachedPlayer.isOnline()) {
-      return null;
-    }
-    return cachedPlayer;
+    return (cachedPlayer != null && cachedPlayer.isOnline()) ? cachedPlayer : null;
   }
 
-  public void setCachedPlayer() {
-    this.cachedPlayer = Bukkit.getPlayer(this.uuid);
-  }
-
-  // should be executed when login
   public void setActivity() {
     this.lastActivityTime = System.currentTimeMillis();
   }
 
   public void grabReward(int reward) {
     Player player = getCachedPlayer();
+    if (player == null) return;
 
-    if (player == null) {
-      return;
-    }
-    StreakReward dailyReward =
-        configuration
-            .getDailyRewards()
-            .get(
-                Math.min(
-                    reward,
-                    configuration
-                        .getDailyRewards()
-                        .size())); // If streak is bigger than reward size then anyway you
-    // will receive max prize
+    int rewardIndex = Math.min(reward, configuration.getDailyRewards().size() - 1);
+    StreakReward dailyReward = configuration.getDailyRewards().get(rewardIndex);
+
     dailyReward.grantReward(player);
     player.closeInventory();
   }
