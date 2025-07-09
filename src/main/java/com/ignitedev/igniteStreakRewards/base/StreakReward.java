@@ -2,13 +2,12 @@ package com.ignitedev.igniteStreakRewards.base;
 
 import com.ignitedev.aparecium.util.MessageUtility;
 import com.ignitedev.aparecium.util.collection.RandomSelector;
+import java.util.List;
+import java.util.Random;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
-import java.util.Random;
 
 @Data
 public class StreakReward {

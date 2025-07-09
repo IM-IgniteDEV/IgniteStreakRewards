@@ -6,14 +6,13 @@ import com.ignitedev.igniteStreakRewards.config.StreakRewardsConfiguration;
 import com.ignitedev.igniteStreakRewards.repository.StreakPlayerRepository;
 import com.ignitedev.igniteStreakRewards.util.ItemUtility;
 import com.twodevsstudio.simplejsonconfig.interfaces.Autowired;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Map;
 
 @RequiredArgsConstructor
 public class DailyInventory {

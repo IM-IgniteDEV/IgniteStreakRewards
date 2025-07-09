@@ -3,7 +3,6 @@ package com.ignitedev.igniteStreakRewards.util;
 import com.ignitedev.aparecium.util.text.TextUtility;
 import com.ignitedev.igniteStreakRewards.config.StreakRewardsConfiguration;
 import com.twodevsstudio.simplejsonconfig.interfaces.Autowired;
-
 import java.util.HashMap;
 import java.util.Map;
 import lombok.experimental.UtilityClass;

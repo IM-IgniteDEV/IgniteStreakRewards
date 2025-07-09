@@ -5,15 +5,14 @@ import com.ignitedev.igniteStreakRewards.config.StreakRewardsConfiguration;
 import com.ignitedev.igniteStreakRewards.event.LoginStreakEvent;
 import com.ignitedev.igniteStreakRewards.event.UniqueJoinEvent;
 import com.twodevsstudio.simplejsonconfig.interfaces.Autowired;
-import lombok.Data;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
+import lombok.Data;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 @Data
 public class StreakPlayer {

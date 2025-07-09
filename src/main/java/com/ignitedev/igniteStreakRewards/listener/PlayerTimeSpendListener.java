@@ -1,7 +1,6 @@
 package com.ignitedev.igniteStreakRewards.listener;
 
 import com.ignitedev.aparecium.util.MessageUtility;
-import com.ignitedev.aparecium.util.text.TextUtility;
 import com.ignitedev.igniteStreakRewards.base.StreakPlayer;
 import com.ignitedev.igniteStreakRewards.base.StreakReward;
 import com.ignitedev.igniteStreakRewards.config.StreakRewardsConfiguration;

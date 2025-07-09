@@ -1,7 +1,6 @@
 package com.ignitedev.igniteStreakRewards.task;
 
 import com.ignitedev.aparecium.util.MessageUtility;
-import com.ignitedev.aparecium.util.text.TextUtility;
 import com.ignitedev.igniteStreakRewards.base.StreakPlayer;
 import com.ignitedev.igniteStreakRewards.config.StreakRewardsConfiguration;
 import com.ignitedev.igniteStreakRewards.repository.StreakPlayerRepository;

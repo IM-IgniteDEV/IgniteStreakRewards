@@ -4,16 +4,15 @@ import com.ignitedev.aparecium.database.SimpleMongo;
 import com.ignitedev.igniteStreakRewards.base.StreakPlayer;
 import com.mongodb.client.MongoCollection;
 import com.twodevsstudio.simplejsonconfig.def.Serializer;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 public class StreakPlayerRepository {

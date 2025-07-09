@@ -5,13 +5,12 @@ import com.ignitedev.igniteStreakRewards.util.ItemUtility;
 import com.twodevsstudio.simplejsonconfig.api.Config;
 import com.twodevsstudio.simplejsonconfig.interfaces.Comment;
 import com.twodevsstudio.simplejsonconfig.interfaces.Configuration;
-import lombok.Getter;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.Getter;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("FieldMayBeFinal")
 @Configuration("StreakRewardsConfiguration.json")
