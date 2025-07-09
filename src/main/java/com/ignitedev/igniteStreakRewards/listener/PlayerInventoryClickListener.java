@@ -11,59 +11,74 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 @RequiredArgsConstructor
 public class PlayerInventoryClickListener implements Listener {
-
   @Autowired private static StreakRewardsConfiguration configuration;
 
   private final StreakPlayerRepository repository;
 
   @EventHandler
   public void onClick(InventoryClickEvent event) {
-    Inventory clickedInventory = event.getClickedInventory();
-    Player player = (Player) event.getWhoClicked();
-    ItemStack clickedItem = event.getCurrentItem();
-
-    if (clickedInventory == null || clickedItem == null) {
-      return;
-    }
-    if (!TextUtility.colorize(configuration.getDailyGuiName())
-        .equalsIgnoreCase(TextUtility.colorize(event.getView().getTitle()))) {
+    if (!isValidClick(event)) {
       return;
     }
     event.setCancelled(true);
+    ItemStack clickedItem = event.getCurrentItem();
 
-    ItemMeta itemMeta = clickedItem.getItemMeta();
-
-    if (itemMeta == null || !itemMeta.hasDisplayName()) {
+    if (clickedItem == null) {
       return;
     }
-    String tag = configuration.getDailyGuiTag().replace("{number}", "");
+    ItemMeta meta = clickedItem.getItemMeta();
+
+    if (meta == null || !meta.hasDisplayName()) {
+      return;
+    }
+    Player player = (Player) event.getWhoClicked();
     StreakPlayer streakPlayer = repository.findOrCreateByUUID(player.getUniqueId());
-    int dailyFinalIndex = 0;
-    String displayName = TextUtility.removeColor(itemMeta.getDisplayName());
+    String displayName = TextUtility.removeColor(meta.getDisplayName());
 
-    if (displayName.contains(tag)) {
-      int dailyIndex = TextUtility.parseStringIntegers(displayName.split(tag)[1])[0];
-      dailyFinalIndex = dailyIndex;
+    handleRewardClick(player, streakPlayer, displayName);
+  }
 
-      if (streakPlayer.getRewardsToGrab().contains(dailyIndex)) {
-        streakPlayer.getRewardsToGrab().remove(((Integer) dailyIndex));
-        streakPlayer.grabReward(dailyIndex);
-        return;
-      }
+  private boolean isValidClick(InventoryClickEvent event) {
+    if (event.getClickedInventory() == null || event.getCurrentItem() == null) {
+      return false;
     }
-    if (streakPlayer.getLoginStreak() < dailyFinalIndex) {
-      MessageUtility.send(
-          player, configuration.getPrefix() + configuration.getRewardNotAvailable());
-    } else {
-      MessageUtility.send(
-          player, configuration.getPrefix() + configuration.getRewardAlreadyClaimed());
+    String guiTitle = TextUtility.colorize(configuration.getDailyGuiName());
+    String clickedTitle = TextUtility.colorize(event.getView().getTitle());
+
+    return guiTitle.equalsIgnoreCase(clickedTitle);
+  }
+
+  private void handleRewardClick(Player player, StreakPlayer streakPlayer, String displayName) {
+    String tag = configuration.getDailyGuiTag().replace("{number}", "");
+
+    if (!displayName.contains(tag)) {
+      return;
     }
+    int dailyIndex = extractDailyIndex(displayName, tag);
+
+    if (streakPlayer.getRewardsToGrab().remove((Integer) dailyIndex)) {
+      streakPlayer.grabReward(dailyIndex);
+      return;
+    }
+    sendRewardStatusMessage(player, streakPlayer, dailyIndex);
     player.closeInventory();
+  }
+
+  private int extractDailyIndex(String displayName, String tag) {
+    return TextUtility.parseStringIntegers(displayName.split(tag)[1])[0];
+  }
+
+  private void sendRewardStatusMessage(Player player, StreakPlayer streakPlayer, int dailyIndex) {
+    String message =
+        streakPlayer.getLoginStreak() < dailyIndex
+            ? configuration.getRewardNotAvailable()
+            : configuration.getRewardAlreadyClaimed();
+
+    MessageUtility.send(player, configuration.getPrefix() + message);
   }
 }
