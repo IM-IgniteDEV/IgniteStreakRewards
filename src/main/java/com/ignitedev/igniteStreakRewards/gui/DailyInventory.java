@@ -2,7 +2,6 @@ package com.ignitedev.igniteStreakRewards.gui;
 
 import com.ignitedev.aparecium.util.text.TextUtility;
 import com.ignitedev.igniteStreakRewards.base.StreakPlayer;
-import com.ignitedev.igniteStreakRewards.base.StreakReward;
 import com.ignitedev.igniteStreakRewards.config.StreakRewardsConfiguration;
 import com.ignitedev.igniteStreakRewards.repository.StreakPlayerRepository;
 import com.ignitedev.igniteStreakRewards.util.ItemUtility;
@@ -14,53 +13,63 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Map.Entry;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public class DailyInventory {
-
   @Autowired private static StreakRewardsConfiguration configuration;
-
   private final StreakPlayerRepository repository;
 
   public void openInventory(Player player) {
-    Inventory inventory =
-        Bukkit.createInventory(
-            null,
-            configuration.getDailyGuiSize(),
-            TextUtility.colorize(configuration.getDailyGuiName()));
+    Inventory inventory = createInventory();
     StreakPlayer streakPlayer = repository.findOrCreateByUUID(player.getUniqueId());
 
-    for (Entry<Integer, ItemStack> inventoryEntry : configuration.getDailyInventory().entrySet()) {
-      ItemStack value = inventoryEntry.getValue();
-      ItemMeta itemMeta = value.getItemMeta();
-      Integer key = inventoryEntry.getKey();
-
-      if (itemMeta == null || !value.hasItemMeta() || !itemMeta.hasDisplayName()) {
-        continue;
-      }
-      String tag = configuration.getDailyGuiTag().replace("{number}", "");
-      String displayName = TextUtility.removeColor(itemMeta.getDisplayName());
-      int dailyIndex = 0;
-
-      if (displayName.contains(tag)) {
-        dailyIndex = TextUtility.parseStringIntegers(displayName.split(tag)[1])[0];
-      }
-      if (itemMeta.getLore() != null) {
-        if (itemMeta.getLore().contains(tag)) {
-          dailyIndex = ItemUtility.getDailyIndex(itemMeta, tag, displayName);
-        }
-      }
-      if (dailyIndex != 0
-          && !streakPlayer.getRewardsToGrab().isEmpty()
-          && streakPlayer.getRewardsToGrab().contains(dailyIndex)) {
-        inventory.setItem(key, new ItemStack(ItemUtility.getEnchantedItem(value)));
-        continue;
-      }
-      inventory.removeItem(value);
-      ItemStack itemWithoutEnchantment = ItemUtility.getNotEnchantedItem(value);
-      inventory.setItem(key, new ItemStack(itemWithoutEnchantment));
+    for (Map.Entry<Integer, ItemStack> entry : configuration.getDailyInventory().entrySet()) {
+      processInventoryItem(entry, inventory, streakPlayer);
     }
     player.openInventory(inventory);
+  }
+
+  private Inventory createInventory() {
+    return Bukkit.createInventory(
+        null,
+        configuration.getDailyGuiSize(),
+        TextUtility.colorize(configuration.getDailyGuiName()));
+  }
+
+  private void processInventoryItem(
+      Map.Entry<Integer, ItemStack> entry, Inventory inventory, StreakPlayer player) {
+    ItemStack item = entry.getValue();
+    ItemMeta meta = item.getItemMeta();
+
+    if (meta == null || !item.hasItemMeta() || !meta.hasDisplayName()) {
+      return;
+    }
+    int dailyIndex = getDailyIndex(meta);
+
+    if (isRewardAvailable(player, dailyIndex)) {
+      inventory.setItem(entry.getKey(), new ItemStack(ItemUtility.getEnchantedItem(item)));
+    } else {
+      inventory.setItem(entry.getKey(), new ItemStack(ItemUtility.getNotEnchantedItem(item)));
+    }
+  }
+
+  private int getDailyIndex(ItemMeta meta) {
+    String tag = configuration.getDailyGuiTag().replace("{number}", "");
+    String displayName = TextUtility.removeColor(meta.getDisplayName());
+
+    if (displayName.contains(tag)) {
+      return TextUtility.parseStringIntegers(displayName.split(tag)[1])[0];
+    }
+    if (meta.getLore() != null && meta.getLore().contains(tag)) {
+      return ItemUtility.getDailyIndex(meta, tag, displayName);
+    }
+    return 0;
+  }
+
+  private boolean isRewardAvailable(StreakPlayer player, int dailyIndex) {
+    return dailyIndex != 0
+        && !player.getRewardsToGrab().isEmpty()
+        && player.getRewardsToGrab().contains(dailyIndex);
   }
 }
