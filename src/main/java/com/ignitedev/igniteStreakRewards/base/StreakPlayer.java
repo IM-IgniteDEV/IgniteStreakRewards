@@ -17,8 +17,6 @@ import java.util.UUID;
 
 @Data
 public class StreakPlayer {
-  private static final int MAX_STREAK = 30;
-
   @Autowired private static StreakRewardsConfiguration configuration;
 
   private final UUID uuid;
@@ -68,7 +66,7 @@ public class StreakPlayer {
   }
 
   private void incrementStreak(IgniteStreakRewards plugin) {
-    loginStreak = Math.min(loginStreak + 1, MAX_STREAK);
+    loginStreak = Math.min(loginStreak + 1, configuration.getDailyRewards().size());
     fireLoginStreakEvent(plugin, loginStreak);
     addRewardIfNotExists(loginStreak);
   }
